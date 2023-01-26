@@ -1,9 +1,12 @@
 package com.example.cribproject
 import android.os.Bundle
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Log.DEBUG
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.BuildConfig.DEBUG
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //We can also use Retrofit,I am using Okhttp.
          val client=OkHttpClient()
          var arrayList_details:ArrayList<User>
         val request = Request.Builder()
@@ -102,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 runOnUiThread {
                     //stuff that updates ui
-                    val obj_adapter : CutsomAdapter
+                    var obj_adapter : CutsomAdapter
                     Log.d("DEBUG","message")
 
 
@@ -114,6 +119,53 @@ class MainActivity : AppCompatActivity() {
                     recyclerView.layoutManager=layoutManager
                     Log.d("DEBUG","I AM AT LINEARLAYOUT MANAGER")
                     recyclerView.adapter=obj_adapter
+
+                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            // on below line we are checking
+                            // if query exist or not.
+
+                            val i:Int=0
+                            val list:ArrayList<User>
+                            list=ArrayList()
+
+                            Log.d("DEBUG","making List")
+                            for(i in 0 until sizee-1){
+                                if(query?.let { arrayList_details.get(i).title.contains(it) } == true) {
+                                    list.add(arrayList_details.get(i))
+                                }
+                            }
+
+
+                            if(list.size==0){
+                                Log.d("DEBUG","zero List")
+                                Toast.makeText(this@MainActivity,"No user found",Toast.LENGTH_LONG)
+                            }
+                            else{
+                                obj_adapter = CutsomAdapter(this@MainActivity,list)
+
+                                recyclerView.adapter=obj_adapter
+                            }
+
+
+                            return true
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+
+                            //do nothing
+                            if(newText=="" || newText.isNullOrBlank()){
+                                obj_adapter = CutsomAdapter(this@MainActivity,arrayList_details)
+
+                                val layoutManager=LinearLayoutManager(applicationContext)
+
+                                recyclerView.adapter=obj_adapter
+                            }
+                            return true
+                        }
+
+
+                    })
                 }
 
             }

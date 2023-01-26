@@ -9,6 +9,7 @@
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
+        android:background="#F8D9D9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

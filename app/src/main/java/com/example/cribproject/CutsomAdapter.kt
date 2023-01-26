@@ -3,12 +3,15 @@ package com.example.cribpro
 import com.example.cribproject.R
 import com.example.cribproject.User
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.view.menu.MenuView.ItemView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cribproject.UserActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_row.view.*
 
@@ -25,6 +28,15 @@ class CutsomAdapter(context: Context,val arrayList: ArrayList<User>): RecyclerVi
             }
 
             itemView?.textView1?.text=user.des
+
+            itemView.setOnClickListener { itemView->
+                val i:Intent= Intent(itemView.context,UserActivity::class.java)
+
+                i.putExtra("1",user.title)
+                i.putExtra("2",user.des)
+                i.putExtra("3",user.thumbnail)
+                itemView.context.startActivity(i)
+            }
         }
     }
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
